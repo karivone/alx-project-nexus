@@ -1,246 +1,177 @@
-# Smart Property Management System (SPMS) - Backend
+# Movie Recommendation Backend API
 
-A robust backend application for managing rental properties, tenants, and landlords, built with Django and PostgreSQL. This project simulates a real-world property management tool supporting secure authentication, property listings, tenant applications, maintenance tracking, and payment recording.
+A comprehensive Django REST API for movie recommendations with user management, caching, and TMDb integration.
 
-## 🚀 Project Nexus: Capstone Overview
+## Features
 
-This project demonstrates mastery of backend engineering concepts including:
+- **Movie Data**: Integration with TMDb API for trending, popular, and detailed movie information
+- **User Authentication**: JWT-based authentication system
+- **User Preferences**: Favorites, ratings, and watchlist management
+- **Personalized Recommendations**: AI-driven recommendations based on user preferences
+- **High Performance**: Redis caching for optimized API response times
+- **Comprehensive Documentation**: Swagger/OpenAPI documentation at `/api/docs`
 
-- RESTful and GraphQL APIs
-- Role-based authentication
-- Optimized database design
-- Background task management
-- API documentation (Swagger & GraphQL Playground)
-- Caching and performance tuning
-- Dockerization and CI/CD practices
+## Tech Stack
 
----
+- **Backend**: Django 5.0, Django REST Framework
+- **Database**: PostgreSQL
+- **Cache**: Redis
+- **Authentication**: JWT (Simple JWT)
+- **API Documentation**: drf-yasg (Swagger)
+- **External API**: The Movie Database (TMDb)
 
-## 📌 Key Features
+## Quick Start
 
-### 🔐 Authentication
-- JWT-based login and registration
-- Role-based access: Admin, Landlord, Tenant
+### Prerequisites
 
-### 🏠 Property Listings
-- CRUD APIs for properties
-- Filtering by location, price, type
-- Pagination and search support
-- Media URL support for property images/videos
+- Python 3.9+
+- PostgreSQL
+- Redis
+- TMDb API Key
 
-### 📄 Tenant Applications
-- Apply to listed properties
-- Upload documents (proof of income, ID)
-- Landlord approval or rejection workflow
+### Installation
 
-### 🛠️ Maintenance Requests
-- Tenants submit repair requests
-- Landlords or admins assign and resolve
-- Optional: WebSocket/real-time updates (via Django Channels)
-
-### 💰 Rent Payments
-- Tenants can log monthly rent payments
-- Payment tracking for each property
-- Optional: mock integration with a payment gateway (e.g., Stripe)
-
-### 📬 Notifications (Optional)
-- In-app/email reminders for upcoming rent
-- Task-based notifications for maintenance status
-- Powered by Celery + Redis
-
-### 📊 Analytics Dashboard (Optional)
-- Number of active tenants
-- Total monthly rent
-- Pending maintenance requests
-
----
-
-## ⚙️ Technologies Used
-
-| Purpose                 | Technology            |
-|------------------------|-----------------------|
-| Backend Framework      | Django, Django REST Framework |
-| Database               | PostgreSQL            |
-| Caching & Queues       | Redis, Celery         |
-| Authentication         | JWT (SimpleJWT)       |
-| Documentation          | Swagger (drf-yasg), GraphQL Playground |
-| DevOps & Deployment    | Docker, GitHub Actions |
-| Version Control        | Git + Conventional Commits |
-| Optional Realtime      | Django Channels       |
-
----
-
-## 🗃️ Database Models (Simplified)
-
-- **User**: Custom user model with roles (`is_admin`, `is_landlord`, `is_tenant`)
-- **Property**: Property listing with metadata (location, rent, media, etc.)
-- **Application**: Tenant applications to properties
-- **MaintenanceRequest**: Requests for property repairs
-- **Payment**: Record of rent payments per tenant per property
-- **Notification**: Optional table for storing alerts/events
-
----
-
-## 📑 API Endpoints
-
-### 🔐 Authentication
-
-| Method | Endpoint           | Description                     |
-|--------|--------------------|---------------------------------|
-| POST   | `/api/auth/register/` | Register a user                |
-| POST   | `/api/auth/login/`    | JWT-based login                |
-| GET    | `/api/auth/profile/`  | Get current user profile       |
-
----
-
-### 🏘️ Property Management
-
-| Method | Endpoint               | Description                    |
-|--------|------------------------|--------------------------------|
-| GET    | `/api/properties/`     | List all properties (with filters) |
-| POST   | `/api/properties/`     | Create a property (landlord only) |
-| GET    | `/api/properties/:id/` | View single property           |
-| PUT    | `/api/properties/:id/` | Update property (owner only)   |
-| DELETE | `/api/properties/:id/` | Delete property (owner only)   |
-
-#### Filters Supported
-
-- `?location=city`
-- `?min_price=10000&max_price=50000`
-- `?type=apartment`
-- Pagination: `?page=1&page_size=10`
-
----
-
-### 📝 Tenant Applications
-
-| Method | Endpoint                          | Description                     |
-|--------|-----------------------------------|---------------------------------|
-| POST   | `/api/applications/`              | Submit application (tenant)    |
-| GET    | `/api/applications/`              | List applications (landlord/admin) |
-| PATCH  | `/api/applications/:id/approve/`  | Approve application (landlord) |
-| PATCH  | `/api/applications/:id/reject/`   | Reject application (landlord)  |
-
----
-
-### 🛠️ Maintenance Requests
-
-| Method | Endpoint                           | Description                      |
-|--------|------------------------------------|----------------------------------|
-| POST   | `/api/maintenance/`                | Submit request (tenant)         |
-| GET    | `/api/maintenance/`                | List all requests (landlord/admin) |
-| PATCH  | `/api/maintenance/:id/resolve/`    | Mark as resolved (landlord)     |
-
----
-
-### 💳 Rent Payments
-
-| Method | Endpoint              | Description                  |
-|--------|-----------------------|------------------------------|
-| POST   | `/api/payments/`      | Record payment (tenant)      |
-| GET    | `/api/payments/`      | View payment history         |
-
----
-
-### 🛎️ Notifications (Optional)
-
-| Method | Endpoint              | Description                  |
-|--------|-----------------------|------------------------------|
-| GET    | `/api/notifications/` | Get all current notifications |
-| POST   | Background via Celery |
-
----
-
-### 🧪 GraphQL (Optional)
-
-> Endpoint: `/graphql/` with GraphQL Playground enabled
-
-Sample Queries:
-```graphql
-query {
-  properties(location: "Nairobi", minPrice: 20000) {
-    title
-    rent
-    landlord {
-      name
-    }
-  }
-}
+1. **Clone the repository**
+```bash
+git clone <repository-url>
+cd movie_recommendation_backend
 ```
 
----
-
-## 📝 API Documentation
-
-- **Swagger UI**: Available at `/api/docs/`
-- **GraphQL Playground**: Available at `/graphql/` (if enabled)
-- **Postman Collection**: [Link to collection](#) (optional)
-
----
-
-## 🐳 Dockerized Setup
-
+2. **Create virtual environment**
 ```bash
-# Build and run the app
-docker-compose up --build
-
-# Run migrations
-docker-compose exec web python manage.py migrate
-
-# Create superuser
-docker-compose exec web python manage.py createsuperuser
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
----
-
-## ✅ Project Goals Achieved
-
-- ✅ REST + GraphQL API implementations
-- ✅ JWT Authentication and RBAC
-- ✅ PostgreSQL with indexing and optimization
-- ✅ Redis Caching for listing queries
-- ✅ Celery tasks for notifications
-- ✅ Swagger Documentation
-- ✅ Docker & GitHub Actions CI
-
----
-
-## 📂 Git Commit Workflow
-
+3. **Install dependencies**
 ```bash
-feat: setup Django project with PostgreSQL
-feat: implement JWT authentication and roles
-feat: add property listing with filtering
-feat: add tenant application logic
-feat: implement rent payment APIs
-feat: integrate Celery + Redis for notifications
-feat: add GraphQL queries for dashboard
-feat: document APIs with Swagger
-docs: update README with setup and usage
-```
-
----
-
-## 📖 Setup Instructions
-
-```bash
-# Clone project
-git clone https://github.com/yourusername/spms-backend.git
-cd spms-backend
-
-# Setup virtualenv
-python3 -m venv env
-source env/bin/activate
 pip install -r requirements.txt
+```
 
-# Run locally
+4. **Environment setup**
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+5. **Database setup**
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+6. **Run the server**
+```bash
 python manage.py runserver
 ```
 
----
+### Environment Variables
 
-## 📌 License
+Create a `.env` file with the following variables:
 
-MIT License
+```env
+DEBUG=True
+SECRET_KEY=your-super-secret-key-here
+DATABASE_URL=postgresql://username:password@localhost:5432/movie_recommendation_db
+REDIS_URL=redis://localhost:6379/0
+TMDB_API_KEY=your-tmdb-api-key-here
+TMDB_BASE_URL=https://api.themoviedb.org/3
+ALLOWED_HOSTS=localhost,127.0.0.1
+```
 
----
+## API Endpoints
+
+### Authentication Endpoints
+
+- `POST /api/auth/register/` - User registration
+- `POST /api/auth/login/` - User login
+- `POST /api/auth/token/refresh/` - Refresh JWT token
+- `GET/PUT /api/auth/profile/` - User profile management
+
+### Movie Endpoints
+
+- `GET /api/movies/trending/` - Get trending movies
+- `GET /api/movies/popular/` - Get popular movies
+- `GET /api/movies/search/` - Search movies
+- `GET /api/movies/<movie_id>/` - Get movie details
+- `GET /api/movies/<movie_id>/recommendations/` - Get movie recommendations
+- `GET /api/movies/recommendations/personalized/` - Get personalized recommendations (auth required)
+
+### User Preference Endpoints
+
+- `GET/POST /api/movies/favorites/` - List/add favorite movies
+- `DELETE /api/movies/favorites/<movie_id>/` - Remove from favorites
+- `GET/POST /api/movies/ratings/` - List/add movie ratings
+- `GET/PUT/DELETE /api/movies/ratings/<movie_id>/` - Manage specific rating
+- `GET/POST /api/movies/watchlist/` - List/add to watchlist
+- `DELETE /api/movies/watchlist/<movie_id>/` - Remove from watchlist
+
+## API Documentation
+
+Once the server is running, visit:
+- **Swagger UI**: `http://localhost:8000/api/docs/`
+- **ReDoc**: `http://localhost:8000/api/redoc/`
+
+## Caching Strategy
+
+The application uses Redis for caching with the following TTL values:
+- **Trending Movies**: 30 minutes
+- **Popular Movies**: 30 minutes
+- **Movie Details**: 1 hour
+- **Movie Recommendations**: 45 minutes
+- **Search Results**: 15 minutes
+
+## Database Schema
+
+### Core Models
+
+1. **User** (Extended Django User)
+   - Email-based authentication
+   - User preferences and profile information
+
+2. **Movie**
+   - Cached movie data from TMDb
+   - Optimized for quick lookups and recommendations
+
+3. **UserFavoriteMovie**
+   - User's favorite movies
+   - Many-to-many relationship with unique constraints
+
+4. **UserMovieRating**
+   - User ratings (1-10 scale)
+   - Used for personalized recommendations
+
+5. **UserWatchlist**
+   - Movies user wants to watch
+   - Simple bookmark functionality
+
+## Performance Optimizations
+
+1. **Database Indexing**: Strategic indexes on frequently queried fields
+2. **Query Optimization**: Select/prefetch related data to minimize queries
+3. **Redis Caching**: Multi-level caching for external API calls
+4. **Pagination**: Consistent pagination across all list endpoints
+5. **Connection Pooling**: Optimized database connections
+
+## Security Features
+
+1. **JWT Authentication**: Secure token-based authentication
+2. **CORS Configuration**: Controlled cross-origin requests
+3. **Input Validation**: Comprehensive request validation
+4. **Rate Limiting**: Protection against API abuse
+5. **Environment Variables**: Secure configuration management
+
+## Testing
+
+Run the test suite:
+```bash
+python manage.py test
+```
+
+For coverage report:
+```bash
+pip install coverage
+coverage run --source='.' manage.py test
+coverage report
+coverage html
