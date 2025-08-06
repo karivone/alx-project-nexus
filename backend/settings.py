@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import dj_database_url
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
@@ -83,16 +84,29 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+#DATABASES = {
+ #   'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+#}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB', default='movie_db'),
-        'USER': config('POSTGRES_USER', default='movie_user'),
-        'PASSWORD': config('POSTGRES_PASSWORD', default='movie_pass'),
-        'HOST': config('POSTGRES_HOST', default='localhost'),
-        'PORT': config('POSTGRES_PORT', default='5432'),
+        'NAME': 'movie_db',
+        'USER': 'movie_user',
+        'PASSWORD': 'movie_pass',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+#DATABASES = {
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.postgresql',
+   #     'NAME': config('POSTGRES_DB', default='movie_db'),
+    #    'USER': config('POSTGRES_USER', default='movie_user'),
+     #   'PASSWORD': config('POSTGRES_PASSWORD', default='movie_pass'),
+      #  'HOST': config('POSTGRES_HOST', default='localhost'),
+       # 'PORT': config('POSTGRES_PORT', default='5432'),
+    #}
+#}
 
 CACHES = {
     'default': {
@@ -118,6 +132,13 @@ REST_FRAMEWORK = {
     ],
 }
 
+# JWT Configuration
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -178,6 +199,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+AUTH_USER_MODEL = 'authentication.User'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -192,7 +214,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'movie_backend.log',
+            'filename': 'backend.log',
         },
         'console': {
             'level': 'INFO',

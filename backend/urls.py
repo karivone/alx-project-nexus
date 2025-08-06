@@ -14,23 +14,28 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from .views import home
 
 schema_view = get_schema_view(
     openapi.Info(
         title="Movie Recommendation API",
         default_version='v1',
-        description="Backend API for Movie Recommendation App",
+        description="A comprehensive movie recommendation backend API",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@movierecommendation.local"),
+        license=openapi.License(name="BSD License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
+
 urlpatterns = [
+    path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('api/auth/', include('authentication.urls')),
     path('api/movies/', include('movies.urls')),

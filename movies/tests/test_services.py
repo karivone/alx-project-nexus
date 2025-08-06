@@ -70,4 +70,4 @@ class MovieServiceTest(TestCase):
         
         self.assertTrue(created)
         self.assertEqual(movie.tmdb_id, 550)
-        self.assertEqual(movie.title, 'Fight Club'
+        self.assertEqual(movie.title, 'Fight Club')
