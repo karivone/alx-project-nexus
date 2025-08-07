@@ -8,12 +8,18 @@ def movies(request):
     url_popular = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=en-US&page=1'
     response_popular = requests.get(url_popular)
     popular_movies = response_popular.json().get('results', [])
+    # Only include movies with a valid id (tmdb_id)
+    filtered_movies = [m for m in popular_movies if m.get('id')]
 
-    # Recommendations (dummy: use top 5 popular, or replace with personalized logic)
-    recommendations = popular_movies[:5]
+    # Recommendations (dummy: use top 5 filtered, or replace with personalized logic)
+    recommendations = filtered_movies[:5]
+
+    # Rename 'id' to 'tmdb_id' for template compatibility
+    for m in filtered_movies:
+        m['tmdb_id'] = m['id']
 
     return render(request, 'movies/movies.html', {
-        'movies': popular_movies,
+        'movies': filtered_movies,
         'recommendations': recommendations
     })
 from rest_framework import generics, status, permissions
