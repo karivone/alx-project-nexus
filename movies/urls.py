@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.movies, name='movies'),
     # Public movie endpoints
     path('trending/', views.trending_movies, name='trending-movies'),
     path('popular/', views.popular_movies, name='popular-movies'),
