@@ -4,10 +4,18 @@ from django.shortcuts import render
 
 def movies(request):
     TMDB_API_KEY = os.getenv('TMDB_API_KEY', 'dabc96b5a972e54425d4efd3010e893d')
-    url = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=en-US&page=1'
-    response = requests.get(url)
-    movies = response.json().get('results', [])
-    return render(request, 'movies.html', {'movies': movies})
+    # Popular movies
+    url_popular = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=en-US&page=1'
+    response_popular = requests.get(url_popular)
+    popular_movies = response_popular.json().get('results', [])
+
+    # Recommendations (dummy: use top 5 popular, or replace with personalized logic)
+    recommendations = popular_movies[:5]
+
+    return render(request, 'movies/movies.html', {
+        'movies': popular_movies,
+        'recommendations': recommendations
+    })
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
