@@ -10,7 +10,7 @@ class Movie(models.Model):
     overview = models.TextField(blank=True)
     release_date = models.DateField(null=True, blank=True)
     poster_path = models.CharField(max_length=255, blank=True)
-    backdrop_path = models.CharField(max_length=255, blank=True)
+    backdrop_path = models.CharField(max_length=255, null=True, blank=True)
     vote_average = models.DecimalField(max_digits=3, decimal_places=1, default=0.0)
     vote_count = models.IntegerField(default=0)
     popularity = models.FloatField(default=0.0)

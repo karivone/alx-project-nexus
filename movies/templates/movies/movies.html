@@ -48,7 +48,19 @@
         <div style="flex: 3;">
             <div class="grid">
             {% for movie in movies %}
-                <a href="/{% url 'movie-details' movie.tmdb_id %}" style="text-decoration: none; color: inherit;">
+                {% if movie.tmdb_id %}
+                    <a href="/{% url 'movie-details' movie.tmdb_id %}" style="text-decoration: none; color: inherit;">
+                        <div class="movie-card">
+                            {% if movie.poster_path %}
+                                <img class="movie-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+                            {% else %}
+                                <div class="movie-poster"></div>
+                            {% endif %}
+                            <div class="movie-title">{{ movie.title }}</div>
+                            <div class="movie-date">{{ movie.release_date }}</div>
+                        </div>
+                    </a>
+                {% else %}
                     <div class="movie-card">
                         {% if movie.poster_path %}
                             <img class="movie-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
@@ -58,7 +70,7 @@
                         <div class="movie-title">{{ movie.title }}</div>
                         <div class="movie-date">{{ movie.release_date }}</div>
                     </div>
-                </a>
+                {% endif %}
             {% endfor %}
             </div>
         </div>
