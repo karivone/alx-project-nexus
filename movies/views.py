@@ -1,3 +1,13 @@
+import os
+import requests
+from django.shortcuts import render
+
+def movies(request):
+    TMDB_API_KEY = os.getenv('TMDB_API_KEY', 'dabc96b5a972e54425d4efd3010e893d')
+    url = f'https://api.themoviedb.org/3/movie/popular?api_key={TMDB_API_KEY}&language=en-US&page=1'
+    response = requests.get(url)
+    movies = response.json().get('results', [])
+    return render(request, 'movies.html', {'movies': movies})
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response

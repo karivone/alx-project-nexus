@@ -19,7 +19,7 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from .views import home
+from movies.views import movies
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -35,7 +35,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', movies, name='home'),
     path('admin/', admin.site.urls),
     path('api/auth/', include('authentication.urls')),
     path('', include('movies.urls')),
