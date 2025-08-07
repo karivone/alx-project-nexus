@@ -115,17 +115,11 @@ def movie_details(request, movie_id):
     try:
         data = MovieService.get_movie_details(movie_id)
         if data is None:
-            return Response(
-                {'error': 'Movie not found'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        return Response(data)
+            return render(request, 'movies/movie_detail.html', {'movie': None, 'error': 'Movie not found'}, status=404)
+        return render(request, 'movies/movie_detail.html', {'movie': data})
     except Exception as e:
         logger.error(f"Error fetching movie details for {movie_id}: {e}")
-        return Response(
-            {'error': 'Internal server error'},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+        return render(request, 'movies/movie_detail.html', {'movie': None, 'error': 'Internal server error'}, status=500)
 
 @swagger_auto_schema(
     method='get',
