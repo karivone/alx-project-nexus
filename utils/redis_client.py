@@ -11,7 +11,7 @@ class RedisClient:
     """Redis client for caching movie data"""
     
     def __init__(self):
-        self.redis_url = getattr(settings, 'REDIS_URL', 'redis://localhost:6379/0')
+        self.redis_url = getattr(settings, 'REDIS_URL', 'redis://redis:6379/0')
         try:
             self.client = redis.from_url(self.redis_url, decode_responses=True)
             self.client.ping()

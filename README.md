@@ -74,7 +74,7 @@ Create a `.env` file with the following variables:
 DEBUG=True
 SECRET_KEY=your-super-secret-key-here
 DATABASE_URL=postgresql://username:password@localhost:5432/movie_recommendation_db
-REDIS_URL=redis://localhost:6379/0
+REDIS_URL=redis://redis:6379/0
 TMDB_API_KEY=your-tmdb-api-key-here
 TMDB_BASE_URL=https://api.themoviedb.org/3
 ALLOWED_HOSTS=localhost,127.0.0.1

@@ -1,14 +1,19 @@
-version: '3.8'
-
 services:
   web:
     build: .
     ports:
       - "8000:8000"
     environment:
-      - DEBUG=False
-      - DATABASE_URL=postgresql://postgres:moviepass@db:5432/movie_recommendation_db
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=backend.settings
+      - DATABASE_URL=postgresql://movie_user:movie_pass@db:5432/movie_db
       - REDIS_URL=redis://redis:6379/0
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=movie_db
+      - DB_USER=movie_user
+      - DB_PASSWORD=movie_pass
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,web
       - TMDB_API_KEY=${TMDB_API_KEY}
     depends_on:
       - db
@@ -17,9 +22,11 @@ services:
       - ./staticfiles:/app/staticfiles
       - ./media:/app/media
     command: >
-      sh -c "python manage.py migrate &&
+      sh -c "echo 'Starting web service...' &&
+             python manage.py migrate &&
              python manage.py collectstatic --noinput &&
-             gunicorn --bind 0.0.0.0:8000 --workers 3 movie_backend.wsgi:application"
+             echo 'Starting Django server...' &&
+             python manage.py runserver 0.0.0.0:8000"
 
   db:
     image: postgres:15-alpine
@@ -31,7 +38,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./db_backup:/backup
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   redis:
     image: redis:7-alpine
@@ -39,7 +46,7 @@ services:
     volumes:
       - redis_data:/data
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
   nginx:
     image: nginx:alpine
@@ -55,27 +62,45 @@ services:
 
   celery:
     build: .
-    command: celery -A movie_backend worker -l info
     environment:
-      - DEBUG=False
-      - DATABASE_URL=postgresql://postgres:moviepass@db:5432/movie_recommendation_db
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=backend.settings
+      - DATABASE_URL=postgresql://movie_user:movie_pass@db:5432/movie_db
       - REDIS_URL=redis://redis:6379/0
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=movie_db
+      - DB_USER=movie_user
+      - DB_PASSWORD=movie_pass
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,web
       - TMDB_API_KEY=${TMDB_API_KEY}
     depends_on:
       - db
       - redis
+    volumes:
+      - ./media:/app/media
+    command: celery -A backend worker --loglevel=info
 
   celery-beat:
     build: .
-    command: celery -A movie_backend beat -l info
     environment:
-      - DEBUG=False
-      - DATABASE_URL=postgresql://postgres:moviepass@db:5432/movie_recommendation_db
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=backend.settings
+      - DATABASE_URL=postgresql://movie_user:movie_pass@db:5432/movie_db
       - REDIS_URL=redis://redis:6379/0
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=movie_db
+      - DB_USER=movie_user
+      - DB_PASSWORD=movie_pass
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,web
       - TMDB_API_KEY=${TMDB_API_KEY}
     depends_on:
       - db
       - redis
+    volumes:
+      - ./media:/app/media
+    command: celery -A backend beat --loglevel=info
 
 volumes:
   postgres_data:
