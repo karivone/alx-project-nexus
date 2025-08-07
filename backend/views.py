@@ -1,11 +1,11 @@
-#from django.http import HttpResponse
-
-#def home(request):
- #   return HttpResponse("Welcome to the Movie Recommendation API!")
-
 import os
 import requests
 from django.shortcuts import render
+
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Welcome to the Movie Recommendation API!")
 
 def movies(request):
     TMDB_API_KEY = os.getenv('TMDB_API_KEY', 'dabc96b5a972e54425d4efd3010e893d')
