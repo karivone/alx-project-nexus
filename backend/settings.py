@@ -103,7 +103,7 @@ DATABASES = {
         'NAME': config('DB_NAME', default='movie_db'),
         'USER': config('DB_USER', default='movie_user'),
         'PASSWORD': config('DB_PASSWORD', default='movie_pass'),
-        'HOST': config('DB_HOST', default='db'),  # Should be 'db', not 'localhost'
+        'HOST': config('DB_HOST', default='localhost'),  # Should be 'db', not 'localhost'
         'PORT': config('DB_PORT', default='5432'),
     }
 }
